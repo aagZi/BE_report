@@ -64,9 +64,13 @@ class User extends Authenticatable
         'is_active'
     ];
 
+    /**
+     * Return password hash untuk pengecekan auth.
+     * Jangan pakai password() — itu memanggil method yang tidak ada.
+     */
     public function getAuthPassword()
     {
-        return $this->password();
+        return $this->attributes['password'] ?? null;
     }
 
 

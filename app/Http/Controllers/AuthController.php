@@ -18,13 +18,37 @@ class AuthController extends Controller
             'password' => 'required|string'
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $email = trim($request->email);
+
+        // Cari user: cek kolom email (trim, case-insensitive agar sesuai DB)
+        $user = User::whereRaw('LOWER(TRIM(email)) = ?', [strtolower($email)])->first();
 
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'User tidak ditemukan',
-            ]);
+                'message' => 'Email atau password salah.',
+            ], 401);
+        }
+
+        // Ambil hash password dari DB (pakai getAuthPassword agar konsisten)
+        $storedPassword = $user->getAuthPassword();
+
+        // Cek password: bcrypt (Laravel default) atau plain text legacy
+        $passwordValid = false;
+        if ($storedPassword !== null && $storedPassword !== '') {
+            if (str_starts_with($storedPassword, '$2y$') || str_starts_with($storedPassword, '$2a$')) {
+                $passwordValid = Hash::check($request->password, $storedPassword);
+            } else {
+                // Legacy: password disimpan plain text (untuk migrasi, sebaiknya diubah ke bcrypt)
+                $passwordValid = hash_equals($storedPassword, $request->password);
+            }
+        }
+
+        if (!$passwordValid) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email atau password salah.',
+            ], 401);
         }
 
         // cek status user
@@ -32,15 +56,7 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'User tidak aktif'
-            ]);
-        }
-
-        // cek password
-        if (!Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'password salah'
-            ]);
+            ], 403);
         }
 
         // update last login

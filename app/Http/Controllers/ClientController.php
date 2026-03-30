@@ -14,6 +14,9 @@ class ClientController extends Controller
 {
     public function __construct(private ClientService $clientService) {}
 
+    /**
+     * GET /list/client - List semua client
+     */
     public function index()
     {
         $clients = $this->clientService->getAllClient();
@@ -22,6 +25,107 @@ class ClientController extends Controller
             'success' => true,
             'message' => 'List client berhasil diambil',
             'data' => $clients,
+        ]);
+    }
+
+    /**
+     * GET /list/client/{id} - Detail client by id
+     */
+    public function show($id)
+    {
+        $client = Client::with(['cabang'])->find($id);
+
+        if (!$client) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Client tidak ditemukan',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail client berhasil diambil',
+            'data' => $client,
+        ]);
+    }
+
+    /**
+     * POST /list/client - Tambah client baru
+     * Body: cabang, nama_client, client_url?, logo?
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'cabang' => 'required|exists:cabang,id_ca',
+            'nama_client' => 'required|string|max:255',
+            'client_url' => 'nullable|string|max:500',
+            'logo' => 'nullable|string|max:500',
+        ]);
+
+        $client = Client::create([
+            'cabang' => $request->cabang,
+            'nama_client' => $request->nama_client,
+            'client_url' => $request->client_url ?? null,
+            'logo' => $request->logo ?? null,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Client berhasil ditambahkan',
+            'data' => $client,
+        ], 201);
+    }
+
+    /**
+     * PUT /list/client/{id} - Update client
+     * Body: cabang?, nama_client?, client_url?, logo?
+     */
+    public function update(Request $request, $id)
+    {
+        $client = Client::find($id);
+
+        if (!$client) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Client tidak ditemukan',
+            ], 404);
+        }
+
+        $request->validate([
+            'cabang' => 'sometimes|exists:cabang,id_ca',
+            'nama_client' => 'sometimes|string|max:255',
+            'client_url' => 'nullable|string|max:500',
+            'logo' => 'nullable|string|max:500',
+        ]);
+
+        $client->update($request->only(['cabang', 'nama_client', 'client_url', 'logo']));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Client berhasil diperbarui',
+            'data' => $client->fresh(),
+        ]);
+    }
+
+    /**
+     * DELETE /list/client/{id} - Hapus client
+     */
+    public function destroy($id)
+    {
+        $client = Client::find($id);
+
+        if (!$client) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Client tidak ditemukan',
+            ], 404);
+        }
+
+        $client->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Client berhasil dihapus',
         ]);
     }
 
@@ -36,7 +140,7 @@ class ClientController extends Controller
         ]);
     }
 
-    // Edit Client
+    // Edit Client (legacy - update client + user)
     public function editClient(Request $request, $id)
     {
 

@@ -15,11 +15,17 @@ use App\Http\Controllers\MyClientController;
 use App\Http\Controllers\GroupUserController;
 use App\Http\Controllers\ClientUserController;
 use App\Http\Controllers\ApiDocController;
+use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\JadwalController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
 // Dokumentasi API untuk frontend (tanpa auth agar bisa dilihat daftar API & params)
 Route::get('/docs', [ApiDocController::class, 'index']);
+
+// Settings — public (mobile app)
+Route::get('/settings', [SettingController::class, 'index']);
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -28,6 +34,12 @@ Route::get('/docs', [ApiDocController::class, 'index']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    // History (task status=1, tugas=4)
+    Route::get('/history', [HistoryController::class, 'index']);
+
+    // Jadwal (DB atrindon_laravel, penghubung email dengan user login)
+    Route::get('/jadwal', [JadwalController::class, 'index']);
 
     // Clients
     Route::get('/me/clients', [MyClientController::class, 'index']);
@@ -60,5 +72,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/list/group', [GroupController::class, 'store']);
     Route::put('/list/group/{id}', [GroupController::class, 'update']);
     Route::delete('/list/group/{id}', [GroupController::class, 'destroy']);
+
+    // Admin Settings
+    Route::get('/admin/settings', [SettingController::class, 'index']);
+    Route::post('/admin/settings', [SettingController::class, 'storeOrUpdate']);
+    Route::post('/admin/settings/upload', [SettingController::class, 'upload']);
+
+    
     
 });
