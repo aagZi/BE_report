@@ -98,6 +98,22 @@ class ApiDocController extends Controller
                         ],
                     ],
                 ],
+                [
+                    'method' => 'POST',
+                    'path' => '/absen/store',
+                    'description' => 'Simpan absensi IN/OUT. user_id dan group_id otomatis diambil/dibuat oleh backend dari token login + client_id.',
+                    'auth_required' => true,
+                    'params' => [
+                        'body' => [
+                            ['name' => 'client_id', 'type' => 'integer', 'required' => true],
+                            ['name' => 'info', 'type' => 'string', 'required' => true, 'description' => 'IN atau OUT'],
+                            ['name' => 'data', 'type' => 'string', 'required' => true, 'description' => 'base64 image (format data:image/...;base64,...)'],
+                            ['name' => 'lat', 'type' => 'string', 'required' => false],
+                            ['name' => 'long', 'type' => 'string', 'required' => false],
+                            ['name' => 'di', 'type' => 'integer', 'required' => false, 'description' => 'id_absen untuk update foto absen lama'],
+                        ],
+                    ],
+                ],
 
                 // ========== List Client (CRUD) ==========
                 [
