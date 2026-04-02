@@ -45,6 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/{id}/clients', [ClientController::class, 'byUserId']);
 
     // Client User Account
+    Route::get('/clientUser/list', [ClientUserController::class, 'index']);
     Route::post('/clientUser/add', [ClientUserController::class, 'addUserClient']);
     Route::post('/clientUser/edit/{id}', [ClientUserController::class, 'editUserClient']);
     Route::delete('/clientUser/delete/{id}', [ClientUserController::class, 'deleteUserClient']);
@@ -58,7 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     // Client List - CRUD
-    Route::get('/list/client', [ClientController::class, 'index']);
+    Route::get('/list/client', [ClientController::class, 'listClientSummary']);
     Route::get('/list/client/{id}', [ClientController::class, 'show']);
     Route::post('/list/client', [ClientController::class, 'store']);
     Route::put('/list/client/{id}', [ClientController::class, 'update']);

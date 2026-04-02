@@ -5,13 +5,31 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EditClientUser;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Services\ClientService;
 use App\Services\ClientUserService;
 use App\Http\Resources\ClientUserResource;
 use App\Http\Requests\StoreClientUserRequest;
 
 class ClientUserController extends Controller
 {
-    public function __construct(private ClientUserService $service) {}
+    public function __construct(
+        private ClientUserService $service,
+        private ClientService $clientService,
+    ) {}
+
+    /**
+     * GET /clientUser/list — List client seperti respons lama GET /list/client (nama_client, cabang, user, email, alamat).
+     */
+    public function index(): JsonResponse
+    {
+        $clients = $this->clientService->getAllClient();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'List client berhasil diambil',
+            'data' => $clients,
+        ]);
+    }
 
     public function addUserClient(StoreClientUserRequest $request): JsonResponse
     {

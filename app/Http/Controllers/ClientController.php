@@ -15,7 +15,7 @@ class ClientController extends Controller
     public function __construct(private ClientService $clientService) {}
 
     /**
-     * GET /list/client - List semua client
+     * GET /clients - List client lengkap (join user: nama_client, cabang, name_user, email, alamat_client)
      */
     public function index()
     {
@@ -25,6 +25,20 @@ class ClientController extends Controller
             'success' => true,
             'message' => 'List client berhasil diambil',
             'data' => $clients,
+        ]);
+    }
+
+    /**
+     * GET /list/client - Ringkas: client, cabang, group saja (per user terdaftar di client).
+     */
+    public function listClientSummary()
+    {
+        $rows = $this->clientService->getClientCabangGroupList();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'List client berhasil diambil',
+            'data' => $rows,
         ]);
     }
 
