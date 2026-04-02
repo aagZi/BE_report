@@ -79,6 +79,8 @@ class AuthController extends Controller
                 'level_label' => $user->level->label(),
                 'status' => $user->status->value,
                 'status_label' => $user->status->label(),
+                'nik' => $user->nik,
+                'photo' => User::photoPublicUrl($user),
                 'token' => $token,
             ],
         ]);

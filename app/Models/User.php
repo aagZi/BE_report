@@ -73,6 +73,26 @@ class User extends Authenticatable
         return $this->attributes['password'] ?? null;
     }
 
+    /**
+     * URL publik untuk foto profil (images/user/{photo}{ext}).
+     * Jika kolom photo sudah berisi URL absolut, dikembalikan apa adanya.
+     */
+    public static function photoPublicUrl(self $user): string
+    {
+        $raw = $user->photo ?? '';
+        if ($raw !== '' && preg_match('#^https?://#i', $raw)) {
+            return $raw;
+        }
+
+        $base = $raw !== '' ? $raw : 'default';
+        $extRaw = $user->p_type ?? 'png';
+        if ($extRaw === '') {
+            $extRaw = 'png';
+        }
+        $ext = str_starts_with($extRaw, '.') ? $extRaw : '.' . ltrim($extRaw, '.');
+
+        return asset('images/user/' . $base . $ext);
+    }
 
     public function isActive(): bool
     {
