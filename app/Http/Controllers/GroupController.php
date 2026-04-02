@@ -11,7 +11,7 @@ class GroupController extends Controller
     public function __construct(private groupService $service) {}
 
     /**
-     * GET /list/group - List semua group
+     * GET /groups — List group lengkap (sama seperti respons lama GET /list/group).
      */
     public function index()
     {
@@ -37,6 +37,27 @@ class GroupController extends Controller
             'success' => true,
             'message' => 'List group berhasil diambil',
             'data' => $groups
+        ]);
+    }
+
+    /**
+     * GET /list/group — Ringkas: id (id_group) dan nama_group per baris.
+     */
+    public function listGroupSummary()
+    {
+        $rows = Groups::query()
+            ->orderBy('nama_group')
+            ->get(['id_group', 'nama_group'])
+            ->map(fn (Groups $g) => [
+                'id' => $g->id_group,
+                'nama_group' => $g->nama_group,
+            ])
+            ->values();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'List group berhasil diambil',
+            'data' => $rows,
         ]);
     }
 

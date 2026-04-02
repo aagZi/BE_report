@@ -66,7 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/list/client/{id}', [ClientController::class, 'destroy']);
 
     // Group List - CRUD
-    Route::get('/list/group', [GroupController::class, 'index']);
+    Route::get('/list/group', [GroupController::class, 'listGroupSummary']);
     Route::get('/list/group/{id}', [GroupController::class, 'show']);
     Route::post('/list/group', [GroupController::class, 'store']);
     Route::put('/list/group/{id}', [GroupController::class, 'update']);
