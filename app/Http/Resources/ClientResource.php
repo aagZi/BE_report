@@ -14,7 +14,8 @@ class ClientResource extends JsonResource
             'cabang' => $this->cabang,
             'nama_client' => $this->nama_client,
             'client_irl' => $this->client_url,
-            'logo' => $this->logo
+            'logo' => $this->logo,
+            'uniqid' => $this->uniqid,
         ];
     }
 }

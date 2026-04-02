@@ -51,7 +51,7 @@ class ClientController extends Controller
 
     /**
      * POST /list/client - Tambah client baru
-     * Body: cabang, nama_client, client_url?, logo?
+     * Body: cabang, nama_client, uniqid, client_url?, logo?
      */
     public function store(Request $request)
     {
@@ -60,6 +60,7 @@ class ClientController extends Controller
             'nama_client' => 'required|string|max:255',
             'client_url' => 'nullable|string|max:500',
             'logo' => 'nullable|string|max:500',
+            'uniqid' => 'required|string|max:64|unique:client,uniqid',
         ]);
 
         $client = Client::create([
@@ -67,6 +68,7 @@ class ClientController extends Controller
             'nama_client' => $request->nama_client,
             'client_url' => $request->client_url ?? null,
             'logo' => $request->logo ?? null,
+            'uniqid' => $request->uniqid,
         ]);
 
         return response()->json([
@@ -78,7 +80,7 @@ class ClientController extends Controller
 
     /**
      * PUT /list/client/{id} - Update client
-     * Body: cabang?, nama_client?, client_url?, logo?
+     * Body: cabang?, nama_client?, uniqid?, client_url?, logo?
      */
     public function update(Request $request, $id)
     {
@@ -96,9 +98,10 @@ class ClientController extends Controller
             'nama_client' => 'sometimes|string|max:255',
             'client_url' => 'nullable|string|max:500',
             'logo' => 'nullable|string|max:500',
+            'uniqid' => 'sometimes|nullable|string|max:64|unique:client,uniqid,'.$id.',id_cli',
         ]);
 
-        $client->update($request->only(['cabang', 'nama_client', 'client_url', 'logo']));
+        $client->update($request->only(['cabang', 'nama_client', 'client_url', 'logo', 'uniqid']));
 
         return response()->json([
             'success' => true,

@@ -17,7 +17,8 @@ class ClientService
                 'c.cabang',
                 'c.nama_client',
                 'c.client_url',
-                'c.logo'
+                'c.logo',
+                'c.uniqid',
             ])
             ->distinct()
             ->orderBy('c.nama_client', 'desc')

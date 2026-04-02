@@ -15,7 +15,8 @@ class Client extends Model
         'cabang',
         'nama_client',
         'client_url',
-        'logo'
+        'logo',
+        'uniqid',
     ];
 
     // ============================= Relasi =============================

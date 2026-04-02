@@ -143,6 +143,7 @@ class ApiDocController extends Controller
                         'body' => [
                             ['name' => 'cabang', 'type' => 'integer', 'required' => true, 'description' => 'id_ca (cabang)'],
                             ['name' => 'nama_client', 'type' => 'string', 'required' => true],
+                            ['name' => 'uniqid', 'type' => 'string', 'required' => true, 'description' => 'ID stabil untuk sinkron dengan atrindon_laravel (unik)'],
                             ['name' => 'client_url', 'type' => 'string', 'required' => false],
                             ['name' => 'logo', 'type' => 'string', 'required' => false],
                         ],
@@ -160,6 +161,7 @@ class ApiDocController extends Controller
                         'body' => [
                             ['name' => 'cabang', 'type' => 'integer', 'required' => false],
                             ['name' => 'nama_client', 'type' => 'string', 'required' => false],
+                            ['name' => 'uniqid', 'type' => 'string', 'required' => false],
                             ['name' => 'client_url', 'type' => 'string', 'required' => false],
                             ['name' => 'logo', 'type' => 'string', 'required' => false],
                         ],
